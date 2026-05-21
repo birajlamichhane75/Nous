@@ -34,6 +34,17 @@ function getClient(): GoogleGenAI {
 // taskType controls how Gemini optimizes the embedding:
 //   RETRIEVAL_DOCUMENT — use when embedding knowledge-base documents
 //   RETRIEVAL_QUERY    — use when embedding the incoming step query
+/**
+ * Generates a vector embedding for the given text using Gemini's embedding model
+ * 
+ * @param text - Input text to embed (document or query)
+ * @param taskType - Optimization hint for Gemini (RETRIEVAL_DOCUMENT or RETRIEVAL_QUERY)
+ * @returns 768-dimensional embedding vector ready for similarity search
+ * @throws Error if API key is missing or embedding generation fails
+ * 
+ * Note: Results are deterministic and cached in the retrieval index for performance.
+ * For large-scale use, consider persisting embeddings to a vector database (e.g., Pinecone).
+ */
 export async function embedText(
   text: string,
   taskType: 'RETRIEVAL_DOCUMENT' | 'RETRIEVAL_QUERY' = 'RETRIEVAL_QUERY',
@@ -49,6 +60,15 @@ export async function embedText(
   return values;
 }
 
+/**
+ * Calculates cosine similarity between two embedding vectors
+ * 
+ * @param a - First embedding vector
+ * @param b - Second embedding vector
+ * @returns Similarity score in range [0, 1] where 1 = identical direction
+ * 
+ * Used for ranking retrieval results. Higher scores indicate more semantically similar content.
+ */
 export function cosineSimilarity(a: number[], b: number[]): number {
   let dot = 0;
   let normA = 0;
@@ -62,8 +82,16 @@ export function cosineSimilarity(a: number[], b: number[]): number {
   return denom === 0 ? 0 : dot / denom;
 }
 
-// Builds the text that gets embedded for a knowledge-base document.
-// Combines concept-level info + the student behavior + tags for broad coverage.
+/**
+ * Converts a misconception document into embedding-ready text
+ * 
+ * Combines structured document fields into a single text representation
+ * that captures: concept, subject, error type, student behavior, correct reasoning,
+ * and tags for comprehensive semantic search coverage.
+ * 
+ * @param doc - Misconception document
+ * @returns Formatted multi-line text optimized for embedding
+ */
 export function docToEmbeddingText(doc: {
   concept: string;
   subject: string;

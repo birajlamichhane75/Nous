@@ -72,6 +72,17 @@ interface RawOutput { question: string; options: RawOption[]; }
 
 // ─── Prompt builder ───────────────────────────────────────────────────────────
 
+/**
+ * Constructs the system prompt for Gemini's cross-question generation
+ * @param best - Best-matching misconception doc from RAG retrieval (null if no match found)
+ * @returns Formatted system prompt with RAG context or fallback instructions
+ * 
+ * Prompt Design:
+ * - Instructs Gemini on diagnostic question format (4-option MCQ)
+ * - Specifies the four error categories and their definitions
+ * - Includes RAG-retrieved misconception pattern if available
+ * - Provides quality rules (word limits, distinctness, authenticity)
+ */
 function buildSystemPrompt(best: ScoredDoc | null): string {
   const ragBlock = formatContextForPrompt(best);
   const coveredCategory = best?.doc.errorCategory ?? null;
@@ -127,8 +138,25 @@ export interface GenerateOptions {
   skipRetrieval?: boolean; // force no RAG context — useful for A/B testing
 }
 
+/** Minimum similarity score to use retrieved misconception; below this triggers fallback **/
 const CONFIDENCE_THRESHOLD = 0.6;
 
+/**
+ * Main entry point for generating diagnostic cross-questions
+ * 
+ * Pipeline:
+ * 1. RAG Retrieval: Semantically search knowledge base for matching misconception
+ * 2. Thresholding: Check if retrieval score meets confidence threshold
+ * 3. Prompt Construction: Build system prompt with or without retrieved context
+ * 4. Gemini API Call: Generate question with structured JSON output
+ * 5. Option Shuffling: Randomize answer positions (A/B/C/D)
+ * 6. Logging: Track retrieval scores and generation metrics
+ * 
+ * @param step - The student step to generate a cross-question for
+ * @param options - Generation options (e.g., skipRetrieval for A/B testing)
+ * @returns Generated cross-question with shuffled options and metadata
+ * @throws Error if GEMINI_API_KEY environment variable is not set
+ */
 export async function generateCrossQuestion(
   step: StepInput,
   options: GenerateOptions = {},
@@ -147,6 +175,7 @@ export async function generateCrossQuestion(
     if (retrieved !== null) {
       logger.retrieval(retrieved.doc.id, retrieved.doc.concept, retrieved.score);
 
+      // Fallback: if retrieval confidence below threshold, don't use RAG context
       if (retrieved.score < CONFIDENCE_THRESHOLD) {
         logger.fallback(step.title, retrieved.score, CONFIDENCE_THRESHOLD);
         best = null;

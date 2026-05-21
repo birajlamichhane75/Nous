@@ -78,14 +78,28 @@ function buildQueryText(step: StepInput): string {
 // ─── Top-1 retrieval — primary function ──────────────────────────────────────
 // Single pass through the index; no sort needed for k=1.
 
+/**
+ * Retrieves the single most relevant misconception for a given step
+ * 
+ * Top-1 retrieval optimized for speed (single pass, no sorting).
+ * Performs semantic search by comparing query embedding against
+ * all indexed misconception embeddings using cosine similarity.
+ * 
+ * @param step - Student step (title, prompt, type, optional subject)
+ * @returns ScoredDoc with highest similarity or null if index is empty
+ * 
+ * Performance: O(n) single pass; no sorting overhead for k=1.
+ */
 export async function retrieveOne(step: StepInput): Promise<ScoredDoc | null> {
   const queryText = buildQueryText(step);
+  // Parallel load: retrieve cached index and embed query simultaneously
   const [index, queryEmbedding] = await Promise.all([
     getIndex(),
     embedText(queryText, 'RETRIEVAL_QUERY'),
   ]);
 
   let best: ScoredDoc | null = null;
+  // Linear scan for top-1: efficient when k is small
   for (const { doc, embedding } of index) {
     const score = cosineSimilarity(queryEmbedding, embedding);
     if (best === null || score > best.score) {
