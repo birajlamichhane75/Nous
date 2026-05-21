@@ -1,3 +1,14 @@
+/**
+ * Type Definitions: RAG System Data Structures
+ * 
+ * Core TypeScript interfaces and types for the Nous RAG pipeline:
+ * - MisconceptionDoc: Knowledge base document representing a student error pattern
+ * - ScoredDoc: Retrieved document with retrieval similarity score
+ * - RetrievedContext: Retrieval results returned to generation module
+ * 
+ * Supports categorization of errors and steps for targeted diagnostics.
+ */
+
 export type StepType = 'Conceptual' | 'Procedural' | 'Calculation';
 
 // Mirrors the ErrorType in the workspace — 'misconception' maps to the 4th diagnostic bucket

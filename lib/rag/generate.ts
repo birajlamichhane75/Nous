@@ -1,3 +1,18 @@
+/**
+ * RAG-powered Cross-Question Generator
+ * 
+ * This module generates diagnostic cross-questions using the Gemini API.
+ * It retrieves relevant misconceptions from the knowledge base via RAG,
+ * constructs contextual prompts, and uses Gemini's structured output
+ * to generate 4-option MCQs that probe student reasoning patterns.
+ * 
+ * Key Features:
+ * - Retrieval-Augmented Generation (RAG) integration
+ * - Structured JSON output using Gemini schema validation
+ * - Fisher-Yates shuffling for randomized answer options
+ * - Support for multiple error categories (conceptual, procedural, calculation)
+ */
+
 import { GoogleGenAI, Type } from '@google/genai';
 import type { Schema } from '@google/genai';
 import { retrieveOne, formatContextForPrompt } from './retrieval';
@@ -6,8 +21,11 @@ import type { ScoredDoc } from './types';
 import { logger } from '../logger';
 
 // ─── Output types ─────────────────────────────────────────────────────────────
-
-type ErrorType = 'correct' | 'conceptual' | 'calculation' | 'misconception';
+// ErrorType categorizes the four answer option types for diagnostic precision
+// - correct: The right principle or reasoning
+// - conceptual: Misunderstands the purpose or meaning
+// - calculation: Confuses values, operations, or quantities  
+// - misconception: Holds a false belief about the underlying concept
 
 export interface MCQOption {
   id: string;   // 'a' | 'b' | 'c' | 'd'
@@ -27,8 +45,8 @@ interface RawOption { text: string; type: ErrorType; }
 interface RawOutput { question: string; options: RawOption[]; }
 
 // ─── Response schema ──────────────────────────────────────────────────────────
-
-const RESPONSE_SCHEMA: Schema = {
+// JSON Schema for Gemini's structured output validation
+// Ensures generated questions always have exactly 4 options with correct types
   type: Type.OBJECT,
   required: ['question', 'options'],
   properties: {
@@ -59,6 +77,7 @@ function buildSystemPrompt(best: ScoredDoc | null): string {
   const coveredCategory = best?.doc.errorCategory ?? null;
 
   // Build the system prompt that will be sent to Gemini
+  // This prompt guides Gemini to generate a diagnostic cross-question based on the retrieved context
   return `You are a diagnostic cross-question generator for Nous, a student learning platform.
 
 TASK
@@ -88,8 +107,8 @@ Return JSON only — no markdown fences, no prose.`;
 }
 
 // ─── Fisher-Yates shuffle + label ────────────────────────────────────────────
-
-function shuffleAndLabel(options: RawOption[]): MCQOption[] {
+// Randomly shuffles answer options and assigns A/B/C/D labels
+// Ensures the correct answer doesn't always appear in the same position
   const arr = [...options];
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));

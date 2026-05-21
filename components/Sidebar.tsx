@@ -1,3 +1,18 @@
+/**
+ * Sidebar Navigation Component
+ * 
+ * Client-side navigation sidebar for the Nous learning platform.
+ * Features:
+ * - Logo and branding at top
+ * - Main navigation: Dashboard, Assignments, Collaboration, Growth, Notifications
+ * - Active route highlighting
+ * - Logout link
+ * - Responsive icon + label layout
+ * 
+ * Uses Lucide icons for navigation items and active state management
+ * based on current pathname.
+ */
+
 "use client";
 
 import Link from "next/link";

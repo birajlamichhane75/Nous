@@ -1,3 +1,21 @@
+/**
+ * RAG Retrieval Engine
+ * 
+ * Semantic search and retrieval module for the Nous RAG system.
+ * Performs similarity-based retrieval over the misconception knowledge base
+ * using embeddings and cosine similarity scoring.
+ * 
+ * Key Functions:
+ * - retrieveOne(step): Semantic search returning top-1 misconception match
+ * - retrieve(step, topK): Flexible top-K retrieval for batch operations
+ * - buildIndex(): Lazy-initialized embedding cache for performance
+ * 
+ * Design Notes:
+ * - Embeddings cached in-process; serialize to persistent store in production
+ * - Query text built from step title, type, subject, and prompt
+ * - Supports arbitrary K values for flexibility
+ */
+
 import { KNOWLEDGE_BASE } from './knowledge-base';
 import { embedText, cosineSimilarity, docToEmbeddingText } from './embeddings';
 import type { MisconceptionDoc, ScoredDoc, RetrievedContext } from './types';

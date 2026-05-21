@@ -1,3 +1,17 @@
+/**
+ * Embedding & Similarity Module
+ * 
+ * Handles vector embeddings for the RAG system using Google's Gemini
+ * embedding model. Provides functions to:
+ * - Generate embeddings for documents and queries
+ * - Calculate cosine similarity between vectors
+ * - Convert misconception documents to embedding-ready text
+ * 
+ * Task Types:
+ * - RETRIEVAL_DOCUMENT: Optimizes embeddings for knowledge-base indexing
+ * - RETRIEVAL_QUERY: Optimizes embeddings for incoming step queries
+ */
+
 import { GoogleGenAI } from '@google/genai';
 
 const MODEL = 'text-embedding-004';

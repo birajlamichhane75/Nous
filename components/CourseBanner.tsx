@@ -1,3 +1,16 @@
+/**
+ * Course Banner Component
+ * 
+ * Renders a visually distinctive banner for each course.
+ * Each course has a unique gradient background and SVG pattern:
+ * - Math 2414 (Calculus): Blue grid with sine wave overlay
+ * - COSC 3312 (Database): Green database-like row pattern
+ * - FREN 1311 (French): Purple diagonal line pattern
+ * 
+ * Props:
+ *   - id: Course ID (e.g., 'math-2414')
+ */
+
 export function CourseBanner({ id }: { id: string }) {
   const art: Record<string, { bg: string; svg: React.ReactNode }> = {
     'math-2414': {

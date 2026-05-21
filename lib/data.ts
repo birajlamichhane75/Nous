@@ -1,3 +1,18 @@
+/**
+ * Course & Assignment Data
+ * 
+ * This module exports the primary data structures and mock dataset
+ * for the Nous learning platform:
+ * - CourseData: Complete course information with metadata
+ * - Assignment: Individual assignment details and status tracking
+ * - Announcement: Course announcements with timestamps
+ * - CourseFile: Resource files (PDFs, presentations, etc.)
+ * 
+ * Contains mock data for demo courses (Calculus II, Database, French I, etc.)
+ * with realistic assignments, announcements, and progress tracking.
+ * In production, replace with API calls to a database.
+ */
+
 export type Status = 'Completed' | 'In Progress' | 'Not Started';
 export type FileType = 'PDF' | 'DOCX' | 'PPTX' | 'ZIP';
 

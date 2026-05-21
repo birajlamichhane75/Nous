@@ -1,3 +1,17 @@
+/**
+ * Debug Logging System
+ * 
+ * Centralized logging for RAG pipeline operations.
+ * Logs key events to nous_debug.log:
+ * - RETRIEVAL: Retrieved documents with scores
+ * - FALLBACK: Fallback scenarios when retrieval score is below threshold
+ * - GEMINI: API latency metrics
+ * - GEMINI_ERROR: Parsing errors from LLM response
+ * - OUTPUT: Final generated question output
+ * 
+ * Usage: import { logger } from '@/lib/logger' and call logger.event()
+ */
+
 import fs from 'fs';
 import path from 'path';
 

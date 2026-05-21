@@ -1,3 +1,18 @@
+/**
+ * Knowledge Base: Misconceptions Catalog
+ * 
+ * Centralized repository of research-backed student misconceptions
+ * organized by subject and concept. Each document contains:
+ * - Conceptual context and error categories
+ * - Real student behaviors and common patterns
+ * - Correct reasoning explanations
+ * - Distractor seeds for question generation
+ * - Teaching notes and remediation guidance
+ * 
+ * Used by RAG retrieval to seed LLM-generated diagnostic questions.
+ * Supports calculus, SQL, CSS, French grammar, and more.
+ */
+
 import type { MisconceptionDoc } from './types';
 
 // ─────────────────────────────────────────────────────────────────────────────
