@@ -58,6 +58,7 @@ function buildSystemPrompt(best: ScoredDoc | null): string {
   const ragBlock = formatContextForPrompt(best);
   const coveredCategory = best?.doc.errorCategory ?? null;
 
+  // Build the system prompt that will be sent to Gemini
   return `You are a diagnostic cross-question generator for Nous, a student learning platform.
 
 TASK

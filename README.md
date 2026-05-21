@@ -1,20 +1,11 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Nous
 
-# Run and deploy your AI Studio app
+Nous is an intelligent, Apple Intelligence-inspired Learning Management System (LMS) designed to change how student learning is assessed and guided. Instead of analyzing binary right/wrong outputs, Nous tracks a student’s entire step-by-step "thinking path" in real-time. 
 
-This contains everything you need to run your app locally.
+When a conceptual misunderstanding is flagged, the platform intercepts the workflow to initialize a diagnostic Socratic teaching loop, offering context-aware hints rooted in the student's past work.
 
-View your app in AI Studio: https://ai.studio/apps/6935df25-f96b-40d9-978c-d5577d2c9a11
+---
 
-## Run Locally
+## 🏗️ System Architecture
 
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Nous implements a decoupled Client-Server architecture optimized for secure, asynchronous data parsing and persistent state management.
