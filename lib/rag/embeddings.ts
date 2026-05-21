@@ -14,7 +14,9 @@ function getClient(): GoogleGenAI {
 }
 // Rag (Retrieval-Augmented Generation) functionality implementation
 // This file contains functions for generating embeddings using the Gemini API
-// for use in a retrieval-augmented generation system.
+// for use in a retrieval-augmented generation system.  
+// The embeddings are used to find the most relevant documents or queries for a given input.
+
 // taskType controls how Gemini optimizes the embedding:
 //   RETRIEVAL_DOCUMENT — use when embedding knowledge-base documents
 //   RETRIEVAL_QUERY    — use when embedding the incoming step query
